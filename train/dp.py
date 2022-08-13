@@ -67,7 +67,7 @@ def process(args):
 
     # create dataloader
     logger('loading {} dataloader ...'.format(args.dataset), prefix='\n')
-    data = Data(args, device_id=0)
+    data = Data(args)
     train_loader = data.dataloader_train
     valid_loader = data.dataloader_valid
 

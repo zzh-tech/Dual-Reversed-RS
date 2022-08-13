@@ -27,12 +27,10 @@ class AverageMeter(object):
         self.avg = self.sum / self.count
 
 
-# todo in case of dict
 def reduce_tensor(num_gpus, ts):
     """
     reduce tensor from multiple gpus
     """
-    # todo loss of ddp mode
     if isinstance(ts, dict):
         raise NotImplementedError
     else:

@@ -87,4 +87,3 @@ class Logger():
         if self.is_best(state['epoch']):
             copy_path = join(self.save_dir, 'model_best.pth.tar')
             shutil.copy(path, copy_path)
-

@@ -7,7 +7,7 @@ class Parameter:
 
     def extract_args(self):
         self.parser = argparse.ArgumentParser(
-            description='Intermediate Frames Extracting From Rolling Shutter Distortion')
+            description='Intermediate Frames Extracting From Dual Reversed RS Distortion')
 
         # global parameters
         self.parser.add_argument('--seed', type=int, default=39, help='random seed')
@@ -23,7 +23,7 @@ class Parameter:
 
         # data parameters
         self.parser.add_argument('--data_root', type=str, default='/home/zhong/Dataset/', help='the path of dataset')
-        self.parser.add_argument('--dataset', type=str, default='RS-GOPRO_DS', help='dataset name')
+        self.parser.add_argument('--dataset', type=str, default='RS-GOPRO', help='dataset name')
         self.parser.add_argument('--save_dir', type=str, default='./experiment/',
                                  help='directory to save logs of experiments')
         self.parser.add_argument('--frames', type=int, default=5,
@@ -31,7 +31,7 @@ class Parameter:
         self.parser.add_argument('--patch_size', type=int, nargs='*', default=[256, 256])
 
         # model parameters
-        self.parser.add_argument('--model', type=str, default='DIFE_MulCatFusion', help='type of model to construct')
+        self.parser.add_argument('--model', type=str, default='IFED', help='type of model to construct')
         self.parser.add_argument('--n_feats', type=int, default=32, help='base # of channels for Conv')
         self.parser.add_argument('--future_frames', type=int, default=1, help='use # of future frames')
         self.parser.add_argument('--past_frames', type=int, default=1, help='use # of past frames')
@@ -53,8 +53,6 @@ class Parameter:
         # training parameters
         self.parser.add_argument('--start_epoch', type=int, default=1, help='first epoch number')
         self.parser.add_argument('--end_epoch', type=int, default=500, help='last epoch number')
-        self.parser.add_argument('--trainer_mode', type=str, default='dp',
-                                 help='trainer mode: distributed data parallel (ddp) or data parallel (dp)')
 
         # test parameters
         self.parser.add_argument('--test_only', action='store_true', help='only do test')
@@ -64,7 +62,7 @@ class Parameter:
         self.parser.add_argument('--test_checkpoint', type=str,
                                  default='./model/checkpoints/model_best.pth.tar',
                                  help='the path of checkpoint file for test')
-        self.parser.add_argument('--video', action='store_true', help='if true, generate video results')
+        # self.parser.add_argument('--video', action='store_true', help='if true, generate video results')
 
         args, _ = self.parser.parse_known_args()
 

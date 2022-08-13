@@ -1,5 +1,4 @@
-.DS_Store
-.idea
-/checkpoints
-/results
-/experiments
+checkpoints/
+results/
+experiments/
+.idea/

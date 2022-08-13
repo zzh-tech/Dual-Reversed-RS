@@ -7,7 +7,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from data.utils import normalize, normalize_reverse, pad, flow_to_image, InputPadder
+from data.utils import normalize, normalize_reverse, pad, flow_to_image
 from data.distortion_prior import distortion_map
 from model import Model
 from .metrics import psnr_calculate, ssim_calculate, lpips_calculate
@@ -31,12 +31,8 @@ def test(args, logger):
 
     ds_name = args.dataset
     logger('{} results generating ...'.format(ds_name), prefix='\n')
-    if ds_name in ['RS-GOPRO_DS', 'RS-GOPRO_DS_lmdb', 'RS-VFI', 'RS-VFI_lmdb', 'RS-GOPRO_DS_Gap2',
-                   'RS-GOPRO_DS_Gap2_lmdb']:
-        ds_type = 'test'
-        _test_torch(args, logger, model, ds_type)
-    else:
-        raise NotImplementedError
+    ds_type = 'test'
+    _test_torch(args, logger, model, ds_type)
 
 
 def _test_torch(args, logger, model, ds_type):
@@ -45,11 +41,7 @@ def _test_torch(args, logger, model, ds_type):
     LPIPS = AverageMeter()
     timer = AverageMeter()
     results_register = set()
-    if args.dataset.startswith('RS-GOPRO'):
-        H, W = 540, 960
-    elif args.dataset.startswith('RS-VFI'):
-        H, W = 512, 512
-    padder = InputPadder((H, W))
+    H, W = 540, 960
     val_range = 2.0 ** 8 - 1
     ext_frames = args.frames
     gs_indices = []
@@ -102,22 +94,22 @@ def _test_torch(args, logger, model, ds_type):
                 for gs_img_path in gs_img_paths:
                     gs_imgs.append(cv2.imread(gs_img_path))
 
-                gs_flows = []
-                gs_t2b_flows_paths = [join(seq_path, 'FL', '{:08d}_fl_t2b_{:03d}.{}'.format(frame_idx, i, 'npy')) for i
-                                      in gs_indices]
-                for gs_flow_path in gs_t2b_flows_paths:
-                    gs_flows.append(np.load(gs_flow_path))
-                gs_b2t_flows_paths = [join(seq_path, 'FL', '{:08d}_fl_b2t_{:03d}.{}'.format(frame_idx, i, 'npy')) for i
-                                      in gs_indices]
-                for gs_flow_path in gs_b2t_flows_paths:
-                    gs_flows.append(np.load(gs_flow_path))
+                # gs_flows = []
+                # gs_t2b_flows_paths = [join(seq_path, 'FL', '{:08d}_fl_t2b_{:03d}.{}'.format(frame_idx, i, 'npy')) for i
+                #                       in gs_indices]
+                # for gs_flow_path in gs_t2b_flows_paths:
+                #     gs_flows.append(np.load(gs_flow_path))
+                # gs_b2t_flows_paths = [join(seq_path, 'FL', '{:08d}_fl_b2t_{:03d}.{}'.format(frame_idx, i, 'npy')) for i
+                #                       in gs_indices]
+                # for gs_flow_path in gs_b2t_flows_paths:
+                #     gs_flows.append(np.load(gs_flow_path))
 
             input_seq = torch.cat((rs_t2b_img, rs_b2t_img), dim=0)[None].float().cuda()  # (1, 2*test_frames, 3, h, w)
             input_seq = pad(input_seq)
             encoding_seq = dis_encoding[None].float().cuda()  # (1, 2*ext_frames, 1, h, w)
             encoding_seq = pad(encoding_seq)
             label_seq = gs_imgs
-            flow_seq = gs_flows
+            # flow_seq = gs_flows
 
             model.eval()
             with torch.no_grad():
@@ -151,7 +143,7 @@ def _test_torch(args, logger, model, ds_type):
                                               val_range=val_range)
                 pred_imgs = pred_imgs.permute(0, 2, 3, 1).detach().cpu().numpy()
                 pred_imgs = np.clip(pred_imgs, 0, val_range).astype(np.uint8)
-                gs_flows = flow_seq
+                # gs_flows = flow_seq
                 pred_flows = pred_flow_seq.permute(0, 2, 3, 1).cpu().numpy()
                 for i, idx in enumerate(gs_indices):
                     gs_img_path = join(save_dir, '{:08d}_gs_{:03d}.{}'.format(frame_idx + start, i, suffix))
@@ -160,12 +152,12 @@ def _test_torch(args, logger, model, ds_type):
                     pred_img_path = join(save_dir, '{:08d}_pred_{:03d}.{}'.format(frame_idx + start, i, suffix))
                     pred_img = pred_imgs[i][:H, :W]
                     cv2.imwrite(pred_img_path, pred_img)
-                    gs_flow_path = join(save_dir, '{:08d}_gs_t2b_flow_{:03d}.{}'.format(frame_idx + start, i, suffix))
-                    gs_flow = flow_to_image(gs_flows[i], convert_to_bgr=True)
-                    cv2.imwrite(gs_flow_path, gs_flow)
-                    gs_flow_path = join(save_dir, '{:08d}_gs_b2t_flow_{:03d}.{}'.format(frame_idx + start, i, suffix))
-                    gs_flow = flow_to_image(gs_flows[i + ext_frames], convert_to_bgr=True)
-                    cv2.imwrite(gs_flow_path, gs_flow)
+                    # gs_flow_path = join(save_dir, '{:08d}_gs_t2b_flow_{:03d}.{}'.format(frame_idx + start, i, suffix))
+                    # gs_flow = flow_to_image(gs_flows[i], convert_to_bgr=True)
+                    # cv2.imwrite(gs_flow_path, gs_flow)
+                    # gs_flow_path = join(save_dir, '{:08d}_gs_b2t_flow_{:03d}.{}'.format(frame_idx + start, i, suffix))
+                    # gs_flow = flow_to_image(gs_flows[i + ext_frames], convert_to_bgr=True)
+                    # cv2.imwrite(gs_flow_path, gs_flow)
                     pred_flow_path = join(save_dir,
                                           '{:08d}_pred_t2b_flow_{:03d}.{}'.format(frame_idx + start, i, suffix))
                     pred_flow = flow_to_image(pred_flows[i][:H, :W], convert_to_bgr=True)
@@ -190,109 +182,107 @@ def _test_torch(args, logger, model, ds_type):
                     end = seq_length
                     start = end - args.test_frames
 
-        if args.video:
-            fps = 10
-            size = (3 * W, 3 * H)
-            logger('seq {} video result generating ...'.format(seq))
-            path = save_dir
-            frame_start = args.past_frames
-            frame_end = seq_length - args.future_frames
-            file_path = join(dirname(path), '{}.avi'.format(seq))
-            fourcc = cv2.VideoWriter_fourcc(*"MJPG")
-            video = cv2.VideoWriter(file_path, fourcc, fps, size)
-            for i in range(frame_start, frame_end):
-                for j in range(ext_frames):
-                    frame = []
-                    # first row: [diff, pred_img, gs_img]
-                    imgs = []
-                    # pred img
-                    img_path = join(path, '{:08d}_pred_{:03d}.{}'.format(i, j, suffix))
-                    pred_img = cv2.imread(img_path)
-                    pred_img_mk = cv2.putText(pred_img.copy(), 'pred {} {}'.format(i, j),
-                                              (60, 60), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
-                    assert pred_img.shape == (H, W, 3), pred_img.shape
-                    # gs img
-                    img_path = join(path, '{:08d}_gs_{:03d}.{}'.format(i, j, suffix))
-                    gs_img = cv2.imread(img_path)
-                    gs_img_mk = cv2.putText(gs_img.copy(), 'gs {} {}'.format(i, j),
-                                            (60, 60), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
-                    assert gs_img.shape == (H, W, 3), gs_img.shape
-                    # pred diff
-                    pred_diff = cv2.absdiff(gs_img, pred_img)
-                    pred_diff = cv2.cvtColor(pred_diff, cv2.COLOR_BGR2GRAY)
-                    pred_diff = cv2.cvtColor(pred_diff, cv2.COLOR_GRAY2BGR)
-                    pred_diff = cv2.putText(pred_diff, 'diff {} {}'.format(i, j),
-                                            (60, 60), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
-                    assert pred_diff.shape == (H, W, 3), pred_diff.shape
-                    imgs.append(pred_diff)
-                    imgs.append(pred_img_mk)
-                    imgs.append(gs_img_mk)
-
-                    imgs = np.concatenate(imgs, axis=1)
-                    assert imgs.shape == (H, 3 * W, 3), imgs.shape
-                    frame.append(imgs)
-
-                    # second row: [rs_t2b_img, pred_t2b_flow, gs_t2b_flow]
-                    imgs = []
-                    # rs t2b img
-                    img_path = join(path, '{:08d}_rs_t2b.{}'.format(i, suffix))
-                    rs_t2b_img = cv2.imread(img_path)
-                    rs_t2b_img = cv2.putText(rs_t2b_img, 'rs t2b {}'.format(i), (60, 60),
-                                             cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
-                    assert rs_t2b_img.shape == (H, W, 3), rs_t2b_img.shape
-                    # pred t2b flow
-                    img_path = join(path, '{:08d}_pred_t2b_flow_{:03d}.{}'.format(i, j, suffix))
-                    pred_flow = cv2.imread(img_path)
-                    pred_flow = cv2.putText(pred_flow, 'pred t2b fl {} {}'.format(i, j),
-                                            (60, 60), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
-                    assert pred_flow.shape == (H, W, 3), pred_flow.shape
-                    # gs t2b flow
-                    img_path = join(path, '{:08d}_gs_t2b_flow_{:03d}.{}'.format(i, j, suffix))
-                    gs_flow = cv2.imread(img_path)
-                    # gs_flow = padder.unpad(gs_flow)
-                    gs_flow = cv2.putText(gs_flow, 'gs t2b fl {} {}'.format(i, j),
-                                          (60, 60), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
-                    assert gs_flow.shape == (H, W, 3), gs_flow.shape
-                    imgs.append(rs_t2b_img)
-                    imgs.append(pred_flow)
-                    imgs.append(gs_flow)
-
-                    imgs = np.concatenate(imgs, axis=1)
-                    assert imgs.shape == (H, 3 * W, 3), imgs.shape
-                    frame.append(imgs)
-
-                    # third row: [rs_b2t_img, pred_b2t_flow, gs_b2t_flow]
-                    imgs = []
-                    # rs t=b2t img
-                    img_path = join(path, '{:08d}_rs_b2t.{}'.format(i, suffix))
-                    rs_b2t_img = cv2.imread(img_path)
-                    rs_b2t_img = cv2.putText(rs_b2t_img, 'rs b2t {}'.format(i), (60, 60),
-                                             cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
-                    assert rs_b2t_img.shape == (H, W, 3), rs_b2t_img.shape
-                    # pred b2t flow
-                    img_path = join(path, '{:08d}_pred_b2t_flow_{:03d}.{}'.format(i, j, suffix))
-                    pred_flow = cv2.imread(img_path)
-                    pred_flow = cv2.putText(pred_flow, 'pred b2t fl {} {}'.format(i, j),
-                                            (60, 60), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
-                    assert pred_flow.shape == (H, W, 3), pred_flow.shape
-                    # gs b2t flow
-                    img_path = join(path, '{:08d}_gs_b2t_flow_{:03d}.{}'.format(i, j, suffix))
-                    gs_flow = cv2.imread(img_path)
-                    # gs_flow = padder.unpad(gs_flow)
-                    gs_flow = cv2.putText(gs_flow, 'gs b2t fl {} {}'.format(i, j),
-                                          (60, 60), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
-                    assert gs_flow.shape == (H, W, 3), gs_flow.shape
-                    imgs.append(rs_b2t_img)
-                    imgs.append(pred_flow)
-                    imgs.append(gs_flow)
-
-                    imgs = np.concatenate(imgs, axis=1)
-                    assert imgs.shape == (H, 3 * W, 3), imgs.shape
-                    frame.append(imgs)
-
-                    frame = np.concatenate(frame, axis=0)
-                    video.write(frame)
-            video.release()
+        # if args.video:
+        #     fps = 10
+        #     size = (3 * W, 3 * H)
+        #     logger('seq {} video result generating ...'.format(seq))
+        #     path = save_dir
+        #     frame_start = args.past_frames
+        #     frame_end = seq_length - args.future_frames
+        #     file_path = join(dirname(path), '{}.avi'.format(seq))
+        #     fourcc = cv2.VideoWriter_fourcc(*"MJPG")
+        #     video = cv2.VideoWriter(file_path, fourcc, fps, size)
+        #     for i in range(frame_start, frame_end):
+        #         for j in range(ext_frames):
+        #             frame = []
+        #             # first row: [diff, pred_img, gs_img]
+        #             imgs = []
+        #             # pred img
+        #             img_path = join(path, '{:08d}_pred_{:03d}.{}'.format(i, j, suffix))
+        #             pred_img = cv2.imread(img_path)
+        #             pred_img_mk = cv2.putText(pred_img.copy(), 'pred {} {}'.format(i, j),
+        #                                       (60, 60), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
+        #             assert pred_img.shape == (H, W, 3), pred_img.shape
+        #             # gs img
+        #             img_path = join(path, '{:08d}_gs_{:03d}.{}'.format(i, j, suffix))
+        #             gs_img = cv2.imread(img_path)
+        #             gs_img_mk = cv2.putText(gs_img.copy(), 'gs {} {}'.format(i, j),
+        #                                     (60, 60), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
+        #             assert gs_img.shape == (H, W, 3), gs_img.shape
+        #             # pred diff
+        #             pred_diff = cv2.absdiff(gs_img, pred_img)
+        #             pred_diff = cv2.cvtColor(pred_diff, cv2.COLOR_BGR2GRAY)
+        #             pred_diff = cv2.cvtColor(pred_diff, cv2.COLOR_GRAY2BGR)
+        #             pred_diff = cv2.putText(pred_diff, 'diff {} {}'.format(i, j),
+        #                                     (60, 60), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
+        #             assert pred_diff.shape == (H, W, 3), pred_diff.shape
+        #             imgs.append(pred_diff)
+        #             imgs.append(pred_img_mk)
+        #             imgs.append(gs_img_mk)
+        #
+        #             imgs = np.concatenate(imgs, axis=1)
+        #             assert imgs.shape == (H, 3 * W, 3), imgs.shape
+        #             frame.append(imgs)
+        #
+        #             # second row: [rs_t2b_img, pred_t2b_flow, gs_t2b_flow]
+        #             imgs = []
+        #             # rs t2b img
+        #             img_path = join(path, '{:08d}_rs_t2b.{}'.format(i, suffix))
+        #             rs_t2b_img = cv2.imread(img_path)
+        #             rs_t2b_img = cv2.putText(rs_t2b_img, 'rs t2b {}'.format(i), (60, 60),
+        #                                      cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
+        #             assert rs_t2b_img.shape == (H, W, 3), rs_t2b_img.shape
+        #             # pred t2b flow
+        #             img_path = join(path, '{:08d}_pred_t2b_flow_{:03d}.{}'.format(i, j, suffix))
+        #             pred_flow = cv2.imread(img_path)
+        #             pred_flow = cv2.putText(pred_flow, 'pred t2b fl {} {}'.format(i, j),
+        #                                     (60, 60), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
+        #             assert pred_flow.shape == (H, W, 3), pred_flow.shape
+        #             # gs t2b flow
+        #             img_path = join(path, '{:08d}_gs_t2b_flow_{:03d}.{}'.format(i, j, suffix))
+        #             gs_flow = cv2.imread(img_path)
+        #             gs_flow = cv2.putText(gs_flow, 'gs t2b fl {} {}'.format(i, j),
+        #                                   (60, 60), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
+        #             assert gs_flow.shape == (H, W, 3), gs_flow.shape
+        #             imgs.append(rs_t2b_img)
+        #             imgs.append(pred_flow)
+        #             imgs.append(gs_flow)
+        #
+        #             imgs = np.concatenate(imgs, axis=1)
+        #             assert imgs.shape == (H, 3 * W, 3), imgs.shape
+        #             frame.append(imgs)
+        #
+        #             # third row: [rs_b2t_img, pred_b2t_flow, gs_b2t_flow]
+        #             imgs = []
+        #             # rs t=b2t img
+        #             img_path = join(path, '{:08d}_rs_b2t.{}'.format(i, suffix))
+        #             rs_b2t_img = cv2.imread(img_path)
+        #             rs_b2t_img = cv2.putText(rs_b2t_img, 'rs b2t {}'.format(i), (60, 60),
+        #                                      cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
+        #             assert rs_b2t_img.shape == (H, W, 3), rs_b2t_img.shape
+        #             # pred b2t flow
+        #             img_path = join(path, '{:08d}_pred_b2t_flow_{:03d}.{}'.format(i, j, suffix))
+        #             pred_flow = cv2.imread(img_path)
+        #             pred_flow = cv2.putText(pred_flow, 'pred b2t fl {} {}'.format(i, j),
+        #                                     (60, 60), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
+        #             assert pred_flow.shape == (H, W, 3), pred_flow.shape
+        #             # gs b2t flow
+        #             img_path = join(path, '{:08d}_gs_b2t_flow_{:03d}.{}'.format(i, j, suffix))
+        #             gs_flow = cv2.imread(img_path)
+        #             gs_flow = cv2.putText(gs_flow, 'gs b2t fl {} {}'.format(i, j),
+        #                                   (60, 60), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), 2)
+        #             assert gs_flow.shape == (H, W, 3), gs_flow.shape
+        #             imgs.append(rs_b2t_img)
+        #             imgs.append(pred_flow)
+        #             imgs.append(gs_flow)
+        #
+        #             imgs = np.concatenate(imgs, axis=1)
+        #             assert imgs.shape == (H, 3 * W, 3), imgs.shape
+        #             frame.append(imgs)
+        #
+        #             frame = np.concatenate(frame, axis=0)
+        #             video.write(frame)
+        #     video.release()
 
     logger('Test images : {}'.format(PSNR.count), prefix='\n')
     logger('Test PSNR : {}'.format(PSNR.avg))

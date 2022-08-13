@@ -12,13 +12,13 @@ Please leave a ⭐ if you like this project!
 
 Our goal is to address the challenging task of reversing rolling shutter (RS) scanning process, *i.e.*, extracting undistorted global shutter image sequence from images suffering from RS distortion.  
 
-<img src="docs/imgs/teaser.jpg" style="zoom:20%;float:left" />
+<img src="docs/imgs/teaser.jpg" width="800px" />
 
 Because RS distortion is coupled with factors such as readout time, deadtime, and the relative velocity, models that only exploit the geometric correlation between temporally adjacent images (consecutive scheme) suffer from poor generality. Although methods of consecutive scheme can correct RS images, they do not know how much correction is correct facing data beyond the dataset (*e.g.*, images captured with different readout setting). We name this as the **correction ambiguity problem**.  
 
-<img src="docs/imgs/ambiguity.jpg" style="zoom:32%;float:left" />
+<img src="docs/imgs/ambiguity.jpg" width="580px" />
 
-Instead of consecutive scheme, we introduce another constraint setting that utilizes intra-frame spatial constraints of dual images taken simultaneously but with reversed distortion captured by top-to-bottom (t2b) and bottom-to-top (b2t) scanning. **Grounded on the symmetric and complementary nature of dual reversed distortion, we develop a novel end-to-end model, IFED, to overcome the correction ambiguity problem of this task and achieve better generality and visual quality. ** 
+Instead of consecutive scheme, we introduce another constraint setting that utilizes intra-frame spatial constraints of dual images taken simultaneously but with reversed distortion captured by top-to-bottom (t2b) and bottom-to-top (b2t) scanning. **Grounded on the symmetric and complementary nature of dual reversed distortion, we develop a novel end-to-end model, IFED, to overcome the correction ambiguity problem of this task and achieve better generality and visual quality.** 
 
 
 

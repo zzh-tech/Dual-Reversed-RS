@@ -34,14 +34,14 @@ Please download the pretrained checkpoints from this [link](https://drive.google
 conda create -n dual-reversed-rs python=3.8
 conda activate dual-reversed-rs
 pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cu113
-pip install tqdm
+pip install tqdm opencv-python tensorboard lpips scikit-image thop
 ```
 
-
+sudo CUDA_VISIBLE_DEVICES=0 /data/home/v-zhizhong/anaconda3/envs/dual-reversed-rs/bin/python main.py --frames 5 --save_dir=./results/ifed_f5/ --data_root=/data/home/v-zhizhong/netdata/
 
 ## Train
 
-For more details of optional variables, please see [para/parameter.py](para/parameter.py)
+For more details of optional variables, please see [para/parameter.py](para/parameter.py).
 
 ```shell
 CUDA_VISIBLE_DEVICES=0 python main.py --frames 5 --save_dir=./results/ifed_f5/ --data_root=./dataset/
@@ -92,4 +92,4 @@ We thank the nice works mentioned below:
 
 - The setup is partially inspired by [rs2cam](https://github.com/CenekAlbl/rs2cam).
 
-- The dataset has a portion of the data from [GOPRO](https://seungjunnah.github.io/Datasets/gopro.html)
+- The dataset has a portion of the data from [GOPRO](https://seungjunnah.github.io/Datasets/gopro.html).

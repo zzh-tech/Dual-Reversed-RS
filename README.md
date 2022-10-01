@@ -4,7 +4,8 @@
 
 by [Zhihang Zhong](https://zzh-tech.github.io/), Mingdeng Cao, Xiao Sun, Zhirong Wu, Zhongyi Zhou, Yinqiang Zheng, Stephen Lin, and Imari Sato
 
-:point_right: [Video demo](https://drive.google.com/file/d/10zGSY0Lqjxmm5gMIpcYmehbOBIRd9oFW/view?usp=sharing)
+:point_right: [Project website](https://zzh-tech.github.io/Dual-Reversed-RS/
+), [Video demo](https://drive.google.com/file/d/10zGSY0Lqjxmm5gMIpcYmehbOBIRd9oFW/view?usp=sharing)
 
 Please leave a ⭐ if you like this project!
 

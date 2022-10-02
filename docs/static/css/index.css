@@ -28,8 +28,7 @@ body {
 }
 
 
-.publication-title {
-}
+.publication-title {}
 
 .publication-banner {
     max-height: parent;
@@ -44,8 +43,7 @@ body {
     object-fit: fit;
 }
 
-.publication-header .hero-body {
-}
+.publication-header .hero-body {}
 
 .publication-title {
     font-family: 'Google Sans', sans-serif;
@@ -67,8 +65,7 @@ body {
     font-weight: bolder;
 }
 
-.publication-authors {
-}
+.publication-authors {}
 
 .publication-authors a {
     color: hsl(204, 86%, 53%) !important;
@@ -82,8 +79,7 @@ body {
     display: inline-block;
 }
 
-.publication-banner img {
-}
+.publication-banner img {}
 
 .publication-authors {
     /*color: #4286f4;*/
@@ -107,8 +103,7 @@ body {
     height: 100%;
 }
 
-.publication-body img {
-}
+.publication-body img {}
 
 
 .results-carousel {
@@ -132,7 +127,7 @@ body {
     border-radius: 10px;
     padding: 0;
     font-size: 0;
-    width: 65%;
+    width: 85%;
 }
 
 .item_img {
@@ -154,8 +149,7 @@ body {
     border-radius: 5px;
 }
 
-.interpolation-video-column {
-}
+.interpolation-video-column {}
 
 .interpolation-panel .slider {
     margin: 0 !important;

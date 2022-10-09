@@ -15,7 +15,7 @@ Our goal is to address the challenging task of reversing rolling shutter (RS) sc
 
 <img src="docs/imgs/teaser.jpg" width="800px" />
 
-Because RS distortion is coupled with factors such as readout time, deadtime, and the relative velocity, models that only exploit the geometric correlation between temporally adjacent images (consecutive scheme) suffer from poor generality. Although methods of consecutive scheme can correct RS images, they do not know how much correction is correct facing data beyond the dataset (*e.g.*, images captured with different readout setting). We name this as the **correction ambiguity problem**.  
+Because RS distortion is coupled with factors such as readout time, deadtime, and the relative velocity, models that only exploit the geometric correlation between temporally adjacent images (consecutive scheme) suffer from poor generalization. Although methods of consecutive scheme can correct RS images, they do not know how much correction is correct facing data beyond the dataset (*e.g.*, images captured with different readout setting). We name this as the **correction ambiguity problem**.  
 
 <img src="docs/imgs/ambiguity.jpg" width="580px" />
 

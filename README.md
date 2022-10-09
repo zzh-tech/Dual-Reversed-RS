@@ -19,7 +19,7 @@ Because RS distortion is coupled with factors such as readout time, deadtime, an
 
 <img src="docs/imgs/ambiguity.jpg" width="580px" />
 
-Instead of consecutive scheme, we introduce another constraint setting that utilizes intra-frame spatial constraints of dual images taken simultaneously but with reversed distortion captured by top-to-bottom (t2b) and bottom-to-top (b2t) scanning. **Grounded on the symmetric and complementary nature of dual reversed distortion, we develop a novel end-to-end model, IFED, to overcome the correction ambiguity problem of this task and achieve better generality and visual quality.** 
+Instead of consecutive scheme, we introduce another constraint setting that utilizes intra-frame spatial constraints of dual images taken simultaneously but with reversed distortion captured by top-to-bottom (t2b) and bottom-to-top (b2t) scanning. **Grounded on the symmetric and complementary nature of dual reversed distortion, we develop a novel end-to-end model, IFED, to overcome the correction ambiguity problem of this task and achieve better generalization and visual quality.** 
 
 
 

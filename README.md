@@ -38,8 +38,6 @@ pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --e
 pip install tqdm opencv-python tensorboard lpips scikit-image thop
 ```
 
-sudo CUDA_VISIBLE_DEVICES=0 /data/home/v-zhizhong/anaconda3/envs/dual-reversed-rs/bin/python main.py --frames 5 --save_dir=./results/ifed_f5/ --data_root=/data/home/v-zhizhong/netdata/
-
 ## Train
 
 For more details of optional variables, please see [para/parameter.py](para/parameter.py).

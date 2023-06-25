@@ -73,11 +73,13 @@ CUDA_VISIBLE_DEVICES=0 python inference.py --frames 9 --rs_img_t2b_path ./demo/s
 If you find this repository useful, please consider citing:
 
 ```bibtex
-@article{zhong2022bringing,
+@inproceedings{zhong2022bringing,
   title={Bringing rolling shutter images alive with dual reversed distortion},
   author={Zhong, Zhihang and Cao, Mingdeng and Sun, Xiao and Wu, Zhirong and Zhou, Zhongyi and Zheng, Yinqiang and Lin, Stephen and Sato, Imari},
-  journal={arXiv preprint arXiv:2203.06451},
-  year={2022}
+  booktitle={Computer Vision--ECCV 2022: 17th European Conference, Tel Aviv, Israel, October 23--27, 2022, Proceedings, Part VII},
+  pages={233--249},
+  year={2022},
+  organization={Springer}
 }
 ```
 

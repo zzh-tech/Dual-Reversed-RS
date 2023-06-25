@@ -5,7 +5,7 @@
 by [Zhihang Zhong](https://zzh-tech.github.io/), Mingdeng Cao, Xiao Sun, Zhirong Wu, Zhongyi Zhou, Yinqiang Zheng, Stephen Lin, and Imari Sato
 
 :point_right: [Project website](https://zzh-tech.github.io/Dual-Reversed-RS/
-), [Video demo](https://drive.google.com/file/d/10zGSY0Lqjxmm5gMIpcYmehbOBIRd9oFW/view?usp=sharing)
+), [Video demo](https://drive.google.com/file/d/13t98z4ODZbivoQ7Mrlua2WXZBSt0U6dy/view?usp=sharing)
 
 Please leave a ⭐ if you like this project!
 
@@ -25,9 +25,9 @@ Instead of consecutive scheme, we introduce another constraint setting that util
 
 ## Preparation
 
-Please download the synthesized RS-GOPRO dataset from this [link](https://drive.google.com/file/d/1DuJphkVpvsNjgPs73y_sm4WZ8tzfxOZf/view?usp=sharing) and unzip it to a directory (*e.g., ./dataset/*).
+Please download the synthesized RS-GOPRO dataset from this [link](https://drive.google.com/file/d/1Txq0tU-1r3T2TjN-DQIe7YHyqwv9rCma/view?usp=sharing) and unzip it to a directory (*e.g., ./dataset/*).
 
-Please download the pretrained checkpoints from this [link](https://drive.google.com/drive/u/1/folders/19RNmG10KMCNRi3VjD2B72GC5MBMlwOit) and put these checkpoints under *./checkpoints/*.
+Please download the pretrained checkpoints from this [link](https://drive.google.com/drive/folders/1HizPUOhC5nJ-cfyRbpmzKQTiXP-8Hj76?usp=sharing) and put these checkpoints under *./checkpoints/*.
 
 #### Installation:
 

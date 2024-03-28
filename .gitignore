@@ -2,3 +2,4 @@ checkpoints/
 results/
 experiments/
 .idea/
+.DS_Store
